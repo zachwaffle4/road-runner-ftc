@@ -1,5 +1,7 @@
 package com.acmerobotics.roadrunner.ftc
 
+import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.IMU
@@ -10,38 +12,32 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
+import kotlin.math.roundToInt
 
 interface PinpointView {
+    var parDirection: DcMotorSimple.Direction
+    var perpDirection: DcMotorSimple.Direction
+
+    var pose: Pose2d
+    var vel: PoseVelocity2d
+
     fun update()
-
-    fun getParEncoderPosition(): Int
-    fun getPerpEncoderPosition(): Int
-    fun getHeadingVelocity(): Float
-
-    fun setParDirection(direction: DcMotorSimple.Direction)
-    fun setPerpDirection(direction: DcMotorSimple.Direction)
 }
 
 class PinpointParEncoder(val pinpoint: PinpointView) : Encoder {
-    override var direction = DcMotorSimple.Direction.FORWARD
-        set(value) {
-            field = value
-            pinpoint.setParDirection(value)
-        }
-    override fun getPositionAndVelocity() = pinpoint.getParEncoderPosition().let {
-        PositionVelocityPair(it, null, it, null)
-    }
+    override var direction by pinpoint::parDirection
+    override fun getPositionAndVelocity() = PositionVelocityPair(
+        pinpoint.pose.position.x.roundToInt(),
+        pinpoint.vel.linearVel.x.roundToInt()
+    )
 }
 
 class PinpointPerpEncoder(val pinpoint: PinpointView) : Encoder {
-    override var direction = DcMotorSimple.Direction.FORWARD
-        set(value) {
-            field = value
-            pinpoint.setPerpDirection(value)
-        }
-    override fun getPositionAndVelocity() = pinpoint.getPerpEncoderPosition().let {
-        PositionVelocityPair(it, null, it, null)
-    }
+    override var direction by pinpoint::perpDirection
+    override fun getPositionAndVelocity() = PositionVelocityPair(
+        pinpoint.pose.position.y.roundToInt(),
+        pinpoint.vel.linearVel.y.roundToInt()
+    )
 }
 
 class PinpointEncoderGroup(
@@ -94,7 +90,7 @@ class PinpointIMU(val pinpoint: PinpointView) : IMU, LazyImu {
     override fun getRobotAngularVelocity(angleUnit: AngleUnit): AngularVelocity {
         pinpoint.update()
         return AngularVelocity(angleUnit, 0.0f, 0.0f,
-            pinpoint.getHeadingVelocity(), 0L)
+            pinpoint.vel.angVel.toFloat(), 0L)
     }
 
     override fun get() = this

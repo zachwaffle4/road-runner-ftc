@@ -178,10 +178,8 @@ private fun recordUnwrappedEncoderData(gs: List<EncoderGroup>, ts: List<Double>,
     ps.times.add(t)
     ps.values.add(pv.position.toDouble())
 
-    if (pv.velocity != null) {
-        vs.times.add(t)
-        vs.values.add(pv.velocity.toDouble())
-    }
+    vs.times.add(t)
+    vs.values.add(pv.velocity.toDouble())
 }
 
 class AngularRampLogger(val dvf: DriveViewFactory) : LinearOpMode() {
@@ -537,9 +535,6 @@ class ManualFeedforwardTuner(val dvf: DriveViewFactory) : LinearOpMode() {
         var movingForwards = true
         var startTs = System.nanoTime() / 1e9
 
-        val lastPositions = MutableList(view.forwardEncs.size) { 0 }
-        val lastTimes = view.forwardEncs.map { ElapsedTime() }
-        val velEstimates = view.forwardEncs.map { RollingThreeMedian() }
         while (!isStopRequested) {
             telemetry.addData("mode", mode)
 
@@ -557,14 +552,7 @@ class ManualFeedforwardTuner(val dvf: DriveViewFactory) : LinearOpMode() {
                         val ref = view.forwardEncs[i]
 
                         val pv = view.encoder(ref).getPositionAndVelocity()
-                        val v = if (pv.velocity == null) {
-                            val lastPos = lastPositions[i]
-                            lastPositions[i] = pv.position
-                            lastTimes[i].reset()
-                            velEstimates[i].update((pv.position - lastPos) / lastTimes[i].seconds())
-                        } else {
-                            pv.velocity.toDouble()
-                        }
+                        val v = pv.velocity
 
                         telemetry.addData("v$i", view.inPerTick * v)
                     }
