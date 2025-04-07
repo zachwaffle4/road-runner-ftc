@@ -1,4 +1,4 @@
-package com.acmerobotics.roadrunner.ftc
+package com.acmerobotics.roadrunner.hardware
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareDevice

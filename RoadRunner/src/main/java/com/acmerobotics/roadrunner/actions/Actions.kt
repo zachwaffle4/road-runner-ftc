@@ -1,11 +1,10 @@
 @file:JvmName("Actions")
 
-package com.acmerobotics.roadrunner.ftc
+package com.acmerobotics.roadrunner.actions
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.canvas.Canvas
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
-import com.acmerobotics.roadrunner.Action
 
 /**
  * Run [a] to completion in a blocking loop.

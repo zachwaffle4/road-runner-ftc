@@ -1,16 +1,21 @@
-package com.acmerobotics.roadrunner.ftc
+package com.acmerobotics.roadrunner.tuning
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.acmerobotics.roadrunner.MecanumKinematics
-import com.acmerobotics.roadrunner.MotorFeedforward
-import com.acmerobotics.roadrunner.PoseVelocity2d
-import com.acmerobotics.roadrunner.PoseVelocity2dDual
-import com.acmerobotics.roadrunner.TankKinematics
-import com.acmerobotics.roadrunner.Time
-import com.acmerobotics.roadrunner.TimeProfile
-import com.acmerobotics.roadrunner.Vector2d
-import com.acmerobotics.roadrunner.constantProfile
+import com.acmerobotics.roadrunner.control.MecanumKinematics
+import com.acmerobotics.roadrunner.control.MotorFeedforward
+import com.acmerobotics.roadrunner.geometry.PoseVelocity2d
+import com.acmerobotics.roadrunner.geometry.PoseVelocity2dDual
+import com.acmerobotics.roadrunner.control.TankKinematics
+import com.acmerobotics.roadrunner.geometry.Time
+import com.acmerobotics.roadrunner.paths.TimeProfile
+import com.acmerobotics.roadrunner.geometry.Vector2d
+import com.acmerobotics.roadrunner.hardware.Encoder
+import com.acmerobotics.roadrunner.hardware.EncoderGroup
+import com.acmerobotics.roadrunner.hardware.LazyImu
+import com.acmerobotics.roadrunner.hardware.LynxQuadratureEncoderGroup
+import com.acmerobotics.roadrunner.hardware.RollingThreeMedian
+import com.acmerobotics.roadrunner.paths.constantProfile
 import com.google.gson.annotations.SerializedName
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
@@ -66,25 +71,25 @@ data class EncoderRef(
 )
 
 class DriveView(
-        val type: DriveType,
-        val inPerTick: Double,
-        val maxVel: Double,
-        val minAccel: Double,
-        val maxAccel: Double,
-        val encoderGroups: List<EncoderGroup>,
+    val type: DriveType,
+    val inPerTick: Double,
+    val maxVel: Double,
+    val minAccel: Double,
+    val maxAccel: Double,
+    val encoderGroups: List<EncoderGroup>,
         // ordered front to rear
-        val leftMotors: List<DcMotorEx>,
-        val rightMotors: List<DcMotorEx>,
+    val leftMotors: List<DcMotorEx>,
+    val rightMotors: List<DcMotorEx>,
         // invariant: (leftEncs.isEmpty() && rightEncs.isEmpty()) ||
         //                  (parEncs.isEmpty() && perpEncs.isEmpty())
-        val leftEncs: List<EncoderRef>,
-        val rightEncs: List<EncoderRef>,
-        val parEncs: List<EncoderRef>,
-        val perpEncs: List<EncoderRef>,
-        val imu: LazyImu,
-        val voltageSensor: VoltageSensor,
-        val feedforwardFactory: FeedforwardFactory,
-        bogus: Int,
+    val leftEncs: List<EncoderRef>,
+    val rightEncs: List<EncoderRef>,
+    val parEncs: List<EncoderRef>,
+    val perpEncs: List<EncoderRef>,
+    val imu: LazyImu,
+    val voltageSensor: VoltageSensor,
+    val feedforwardFactory: FeedforwardFactory,
+    bogus: Int,
 ) {
     // Legacy constructor to preserve compatibility with older quickstarts.
     constructor(

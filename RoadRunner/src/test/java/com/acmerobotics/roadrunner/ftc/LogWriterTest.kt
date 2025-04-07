@@ -1,5 +1,7 @@
 package com.acmerobotics.roadrunner.ftc
 
+import com.acmerobotics.roadrunner.tuning.LogWriter
+import com.acmerobotics.roadrunner.tuning.PrimitiveSchema
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -66,7 +68,7 @@ object LogWriterTest {
     @Test
     fun testEncoding() {
         class Nested(
-                @JvmField
+            @JvmField
                 var m: PrimitiveSchema,
         )
 
