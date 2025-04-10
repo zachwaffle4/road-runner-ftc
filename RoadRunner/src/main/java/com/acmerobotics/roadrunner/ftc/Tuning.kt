@@ -8,9 +8,9 @@ import com.acmerobotics.roadrunner.geometry.PoseVelocity2d
 import com.acmerobotics.roadrunner.geometry.PoseVelocity2dDual
 import com.acmerobotics.roadrunner.control.TankKinematics
 import com.acmerobotics.roadrunner.geometry.Time
-import com.acmerobotics.roadrunner.paths.TimeProfile
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.acmerobotics.roadrunner.paths.constantProfile
+import com.acmerobotics.roadrunner.profiles.TimeProfile
+import com.acmerobotics.roadrunner.profiles.constantProfile
 import com.google.gson.annotations.SerializedName
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
