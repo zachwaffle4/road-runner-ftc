@@ -1,62 +1,66 @@
 package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.acmerobotics.roadrunner.actions.Action
 import com.acmerobotics.roadrunner.control.Drive
-import com.acmerobotics.roadrunner.geometry.PoseVelocity2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.acmerobotics.roadrunner.trajectories.TimeTrajectory
+import com.acmerobotics.roadrunner.geometry.range
+import com.acmerobotics.roadrunner.geometry.xs
+import com.acmerobotics.roadrunner.geometry.ys
+import com.acmerobotics.roadrunner.paths.PosePath
+import com.acmerobotics.roadrunner.profiles.AccelConstraint
+import com.acmerobotics.roadrunner.profiles.VelConstraint
+import com.acmerobotics.roadrunner.trajectories.DisplacementTrajectory
+import com.acmerobotics.roadrunner.trajectories.Trajectory
 import java.lang.Math.toDegrees
 import kotlin.math.ceil
 import kotlin.math.max
-import kotlin.properties.Delegates
-import kotlin.text.get
 
 class FollowTrajectoryAction(
-    @JvmField val traj: TimeTrajectory,
-    @JvmField val drive: Drive<*, *>
-) : InitLoopAction() {
-    var startTime by Delegates.notNull<Double>()
+    @JvmField
+    val follower: Follower,
+    @JvmField
+    val drive: Drive<*, *>
+) : Action {
+    constructor(
+        traj: Trajectory,
+        drive: Drive<*, *>
+    ) : this(
+        DisplacementFollower(traj, drive),
+        drive
+    )
+
+    constructor(
+        path: PosePath,
+        drive: Drive<*, *>,
+        velConstraintOverride: VelConstraint = drive.followerParams.velConstraint,
+        accelConstraintOverride: AccelConstraint = drive.followerParams.accelConstraint
+    ) : this(
+        DisplacementFollower(path, drive, velConstraintOverride, accelConstraintOverride),
+        drive
+    )
+
     val points = range(
         0.0,
-        traj.path.length(),
-        max(2, ceil(traj.path.length() / 2 ).toInt())
+        follower.trajectory.length(),
+        max(2, ceil(follower.trajectory.length() / 2 ).toInt())
     ).let {
         List<Vector2d>(it.size) { i ->
-            traj.path[it[i], 1].value().position
+            follower.trajectory[it[i]].value().position
         }
     }
 
-    val xPoints = points.map { it.x }.toDoubleArray()
-    val yPoints = points.map { it.y }.toDoubleArray()
+    val xPoints = points.xs().toDoubleArray()
+    val yPoints = points.ys().toDoubleArray()
 
-    override fun init(p: TelemetryPacket) {
-        startTime = now()
-    }
-
-    override fun loop(p: TelemetryPacket): Boolean {
-        val t = now() - startTime
-
-        if (t >= traj.duration) {
-            drive.setDrivePowers(PoseVelocity2d(Vector2d(0.0, 0.0), 0.0))
-            return false
-        }
-
-        val target = traj[t]
-        val robotVel = drive.updatePoseEstimate()
-
-        val command = drive.controller.compute(
-            target,
-            drive.localizer.pose,
-            robotVel
-        )
-
-        drive.setDrivePowersWithFF(command)
+    override fun run(p: TelemetryPacket): Boolean {
+        drive.setDrivePowersWithFF(follower.follow())
 
         p.put("x", drive.localizer.pose.position.x)
         p.put("y", drive.localizer.pose.position.y)
         p.put("heading (deg)", toDegrees(drive.localizer.pose.heading.toDouble()))
 
-        val error = target.value().minusExp(drive.localizer.pose)
+        val error = follower.currentTarget.minusExp(drive.localizer.pose)
         p.put("xError", error.position.x)
         p.put("yError", error.position.y)
         p.put("headingError (deg)", toDegrees(error.heading.toDouble()))
@@ -66,7 +70,7 @@ class FollowTrajectoryAction(
         drive.drawPoseHistory(c)
 
         c.setStroke("#4CAF50")
-        drawRobot(c, target.value())
+        drawRobot(c, follower.currentTarget)
 
         c.setStroke("#3F51B5")
         drawRobot(c, drive.localizer.pose)
@@ -75,6 +79,6 @@ class FollowTrajectoryAction(
         c.setStrokeWidth(1)
         c.strokePolyline(xPoints, yPoints)
 
-        return true
+        return follower.isDone
     }
 }
