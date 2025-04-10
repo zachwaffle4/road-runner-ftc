@@ -1,6 +1,6 @@
 @file:JvmName("LogFile")
 
-package com.acmerobotics.roadrunner.tuning
+package com.acmerobotics.roadrunner.ftc
 
 import java.io.OutputStream
 import java.lang.reflect.Modifier

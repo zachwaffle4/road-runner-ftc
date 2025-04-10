@@ -1,6 +1,6 @@
 @file:JvmName("Actions")
 
-package com.acmerobotics.roadrunner.actions
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.canvas.Canvas

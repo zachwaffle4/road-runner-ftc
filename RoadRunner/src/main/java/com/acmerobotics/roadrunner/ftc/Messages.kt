@@ -1,9 +1,8 @@
-package com.acmerobotics.roadrunner.util
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.PoseVelocity2dDual
 import com.acmerobotics.roadrunner.geometry.Time
-import com.acmerobotics.roadrunner.hardware.PositionVelocityPair
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles

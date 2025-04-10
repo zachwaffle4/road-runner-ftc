@@ -1,4 +1,4 @@
-package com.acmerobotics.roadrunner.hardware
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS

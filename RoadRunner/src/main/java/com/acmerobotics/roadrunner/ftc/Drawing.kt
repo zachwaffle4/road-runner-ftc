@@ -1,6 +1,6 @@
 @file:JvmName("Drawing")
 
-package com.acmerobotics.roadrunner.util
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.dashboard.canvas.Canvas

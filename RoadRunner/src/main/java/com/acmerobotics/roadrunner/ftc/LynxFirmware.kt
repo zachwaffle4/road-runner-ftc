@@ -1,6 +1,6 @@
 @file:JvmName("LynxFirmware")
 
-package com.acmerobotics.roadrunner.hardware
+package com.acmerobotics.roadrunner.ftc
 
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.HardwareMap

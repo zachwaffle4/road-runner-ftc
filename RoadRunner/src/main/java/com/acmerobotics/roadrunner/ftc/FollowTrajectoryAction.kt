@@ -1,17 +1,15 @@
-package com.acmerobotics.roadrunner.actions
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.control.Drive
-import com.acmerobotics.roadrunner.util.drawPoseHistory
-import com.acmerobotics.roadrunner.util.drawRobot
 import com.acmerobotics.roadrunner.geometry.PoseVelocity2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.acmerobotics.roadrunner.geometry.range
 import com.acmerobotics.roadrunner.trajectories.TimeTrajectory
 import java.lang.Math.toDegrees
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.properties.Delegates
+import kotlin.text.get
 
 class FollowTrajectoryAction(
     @JvmField val traj: TimeTrajectory,

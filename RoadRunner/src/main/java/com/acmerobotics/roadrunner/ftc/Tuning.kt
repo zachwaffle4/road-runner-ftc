@@ -1,4 +1,4 @@
-package com.acmerobotics.roadrunner.tuning
+package com.acmerobotics.roadrunner.ftc
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
@@ -10,12 +10,6 @@ import com.acmerobotics.roadrunner.control.TankKinematics
 import com.acmerobotics.roadrunner.geometry.Time
 import com.acmerobotics.roadrunner.paths.TimeProfile
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.acmerobotics.roadrunner.hardware.Encoder
-import com.acmerobotics.roadrunner.hardware.EncoderGroup
-import com.acmerobotics.roadrunner.hardware.LazyImu
-import com.acmerobotics.roadrunner.hardware.LynxQuadratureEncoderGroup
-import com.acmerobotics.roadrunner.hardware.RollingThreeMedian
-import com.acmerobotics.roadrunner.paths.constantProfile
 import com.google.gson.annotations.SerializedName
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
@@ -27,6 +21,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import kotlin.collections.get
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.atan2
